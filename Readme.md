@@ -1,9 +1,9 @@
 # Resin exchange controller V1.0 
-by Lucas Schmirl, FH Technikum-Wien
+by Lucas Schmirl, dept. industrial engineering, UAS Technikum Wien, mr22m015@technikum-wien.at
 
 ---
 
-## This script controls an arduino Nano to be used with the DLP-System.
+# Control an arduino Nano and 2 channel Relais to be used with the DLP-System.
 
 - The push of a button triggers the corresponding Relais circuit (total: 2x 12V).
 
@@ -11,7 +11,7 @@ by Lucas Schmirl, FH Technikum-Wien
 
 - For further use, the Arduino will take digital or analog signals from the DLP-System and can be programmed to act as desired.
 
----
+
 
 ## Wires
 ### Control
@@ -28,7 +28,7 @@ by Lucas Schmirl, FH Technikum-Wien
     - control signal from arduino (with jumper) from external source (5V DC) (without jumper)
     - external power source (max: 10A 250VAC, 30VDC)
 
----
+
 
 ## Convenient connections
 For the ease of maintainance, the lid of the control box can be taken off and the components which are fixed to the lid are connected to the system via connectors.
@@ -38,3 +38,7 @@ For the ease of maintainance, the lid of the control box can be taken off and th
 - Oled screen
 
 
+
+---
+
+# Control a stepper motor with arduino uno, controlled from PC (USB-connection)
