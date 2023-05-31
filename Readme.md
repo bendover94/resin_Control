@@ -41,4 +41,7 @@ For the ease of maintainance, the lid of the control box can be taken off and th
 
 ---
 
-# Control a stepper motor with arduino uno, controlled from PC (USB-connection)
+# Control a stepper motor with arduino uno
+controlled from PC (USB-connection) using python.
+
+[![Stepper control unit animation](https://res.cloudinary.com/marcomontalbano/image/upload/v1685572570/video_to_markdown/images/youtube--DMu0SnQDX-w-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/DMu0SnQDX-w "Stepper control unit animation")
