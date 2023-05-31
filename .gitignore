@@ -1,0 +1,26 @@
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+!*Makefile
+!*README.md
+
+# Ignore following dirs
+.vscode/
+.catkin_tools/
+build/
+devel/
+logs/
+
+
+# Ignore files with specific extension
+*.o
+*.out
+*.pdf:Zone.Identifier
+*:Zone.Identifier
+*.json
+*.mp4
