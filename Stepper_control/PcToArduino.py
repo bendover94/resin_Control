@@ -12,7 +12,7 @@ C_YELLOW = "\033[0;33m"
 C_OFF = "\033[0m"
 
 
-# Open the serial port
+# # Open the serial port
 try:
     arduino = serial.Serial(arduino_port, baud_rate, timeout=.1)
     print(f"\n{C_BLUE}Establishing connection to arduino at port: {arduino_port} ...{C_OFF}")
@@ -23,7 +23,11 @@ try:
 except:
     print(f"{C_RED}Connection to port {arduino_port} failed.{C_OFF} Please check for valid COM port")
     exit()
-    
+
+
+def MicrometerToSteps(micrometer):
+    steps = micrometer * 30 / 16
+    return steps
 
 
 
@@ -95,57 +99,56 @@ class StepperPump:
 
 
 
-def MicrometerToSteps(micrometer):
-    steps = micrometer * 30 / 16
-    return steps
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
 if __name__ == "__main__":
 
-
+    direction = 1
     micrometer = 10
+    RPM = 5
+    steps = MicrometerToSteps(micrometer)
 
 
-#240
-#3200 * 2.65
-    
+
     pumpZ = StepperPump(
-                            3,      # whichPump         Axis: X==1,Y==2,Z==3,A==4
-                            MicrometerToSteps(micrometer),    # stepsToGo         3200 == 360degrees
-                            0,     # retractSteps      amount of steps to retract, if 0 than no retraction
-                            5,     # RPM               Rounds per minute
-                            1,      # direction         1 == Rein, 0 == Raus
-                            0,    # retractDelay      delay between steps and retraction [ms]
-                            100,    # fanSpeed          value from 0-100 %
-                            -1       # fanTime           after-run time of fan [s] if -1 fan is forever on
+                            3,          # whichPump         Axis: X==1,Y==2,Z==3,A==4
+                            steps,      # stepsToGo         3200 == 360degrees
+                            0,          # retractSteps      amount of steps to retract, if 0 than no retraction
+                            RPM,        # RPM               Rounds per minute
+                            direction,  # direction         1 == Rein, 0 == Raus
+                            0,          # retractDelay      delay between steps and retraction [ms]
+                            100,        # fanSpeed          value from 0-100 %
+                            -1          # fanTime           after-run time of fan [s] if -1 fan is forever on
                        )
-    
-    #pumpX = StepperPump(1, 3200, 100, 30, 0, 500, 100, -1)
+
 
 
     while(True):
-        uInput = input(f"\nDo you want to send the command?\n{MicrometerToSteps(micrometer)} steps / {micrometer} micrometers.) y/end: ")
+        uInput = input(f"\n{C_BLUE}Send command?{C_OFF}\nMicrometers: {micrometer} -> resulting in {MicrometerToSteps(micrometer)} steps, RPM: {RPM}, direction: {direction}. y/n: ")
         if (uInput == 'y'):
             pumpZ.sendCommand()
-            #pumpX.sendCommand()
+        elif (uInput == 'n'):
+            uInput = input(f"{C_YELLOW}'m'.......change micrometers\n'd'.......change direction\n'r'.......change RPM\n'e'.......end program\n{C_BLUE}input: {C_OFF}")
+            
+            if (uInput == 'm'):
+                micrometer = int(input(f"Type new micrometers: "))
+            
+            elif (uInput == 'd'):
+                if (direction == 1):
+                    direction = 0
+                else:
+                    direction = 1
+
+            elif (uInput == 'r'):
+                RPM = int(input(f"Type new RPM: "))
         
-        elif (uInput == 'end'):
-            pumpZ.deactivate()
-            #pumpX.deactivate()
-            sleep(5)
-            arduino.close() # Close the serial port#
-            print(f"{C_BLUE}Disconnected.{C_OFF}")
-            exit()
+            elif (uInput == 'e'):
+                pumpZ.deactivate()
+                sleep(5)
+                arduino.close() # Close the serial port
+                print(f"{C_BLUE}Disconnected.{C_OFF}")
+                exit()
+
+            else:
+                pass
         
-        else:
-            pass
+            pumpZ = StepperPump(3, steps, 0, RPM, direction, 0, 100, -1)
