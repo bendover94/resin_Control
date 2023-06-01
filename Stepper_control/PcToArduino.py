@@ -2,7 +2,7 @@ import serial
 from time import sleep
 
 # Establish serial connection
-arduino_port = 'COM4'       # Replace with Arduino's serial port
+arduino_port = 'COM6'       # Replace with Arduino's serial port
 baud_rate = 500000          # Set the baud rate used by Arduino
 
 C_RED = "\033[0;31m"
@@ -95,45 +95,57 @@ class StepperPump:
 
 
 
+def MicrometerToSteps(micrometer):
+    steps = micrometer * 30 / 16
+    return steps
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 if __name__ == "__main__":
 
 
-    pump1 = StepperPump(
+    micrometer = 10
+
+
+#240
+#3200 * 2.65
+    
+    pumpZ = StepperPump(
                             3,      # whichPump         Axis: X==1,Y==2,Z==3,A==4
-                            5*3200,   # stepsToGo         3200 == 360degrees
-                            50,     # retractSteps      amount of steps to retract, if 0 than no retraction
-                            50,     # RPM               Rounds per minute
-                            0,      # direction         1 == CW, 0 == CCW
-                            500,    # retractDelay      delay between steps and retraction [ms]
-                            100,     # fanSpeed          value from 0-100 %
-                            10       # fanTime           after-run time of fan [s] if -1 fan is forever on
+                            MicrometerToSteps(micrometer),    # stepsToGo         3200 == 360degrees
+                            0,     # retractSteps      amount of steps to retract, if 0 than no retraction
+                            5,     # RPM               Rounds per minute
+                            1,      # direction         1 == Rein, 0 == Raus
+                            0,    # retractDelay      delay between steps and retraction [ms]
+                            100,    # fanSpeed          value from 0-100 %
+                            -1       # fanTime           after-run time of fan [s] if -1 fan is forever on
                        )
     
-    pump2 = StepperPump(1, 5*3200, 50, 80, 0, 500, 100, 10)
+    #pumpX = StepperPump(1, 3200, 100, 30, 0, 500, 100, -1)
 
 
     while(True):
-        uInput = input("\nDo you want to send the command? y/end: ")
+        uInput = input(f"\nDo you want to send the command?\n{MicrometerToSteps(micrometer)} steps / {micrometer} micrometers.) y/end: ")
         if (uInput == 'y'):
-            pump1.sendCommand()
-            pump2.sendCommand()
+            pumpZ.sendCommand()
+            #pumpX.sendCommand()
         
         elif (uInput == 'end'):
-            pump1.deactivate()
-            pump2.deactivate()
+            pumpZ.deactivate()
+            #pumpX.deactivate()
             sleep(5)
             arduino.close() # Close the serial port#
+            print(f"{C_BLUE}Disconnected.{C_OFF}")
             exit()
         
         else:
             pass
-        
-        
-    
-
-
-
-
-
-
-
