@@ -64,3 +64,18 @@ run program with:
 ```bash
 python3 ./PcToArduino.py
 ```
+
+## Fragen an Betreuer
+
+- Steuerung: Matlab und Kommunikation zu arduino oder nur Arduino zu stepper erklären?
+- Regler auch erklären?
+- Was vom alten paper kann bleiben?
+- Was von den alten prototypen darf ich beschreiben (erklärung warum sie nicht verwendet wurden)?
+- Bedienungsanleitung?
+- Wann kann ich das nächste mal für feedback abgeben?
+- Komponentenliste in Paper anhängen? Preise? wer zahlt?
+- Zugang für Github Repo?
+- Repo auch anhängen?
+
+
+Paper: [edit](https://www.overleaf.com/1342524919kjhmkdnryqwf), [view](https://www.overleaf.com/read/ywpgvjhnpwxv)
