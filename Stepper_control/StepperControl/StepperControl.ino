@@ -27,6 +27,7 @@ const int stepsPerRevolution = stepper * microSteps;
 static bool waitingScreenToggle = false;
 unsigned long long previousMillis = 0;
 static int fanAlwaysOn = false;
+static unsigned int moveStep = 0;
 
 // Receive Data init
 static int whichPump;                   // defines the controlled pump
@@ -80,17 +81,45 @@ void loop()
   if(Serial.available())
   {
     receive();                  // call the receive function
-    
-    move();                     // move the given steps
-    
-    // if retraction is enabled
-    if (retractSteps > 0)
+  }
+  if(moveStep == 1)
+  {
+    initMove();
+    moveStep = 2;                     // move the given steps
+  }  
+  if(moveStep == 2)
+  {
+    // step the motor one step:
+    makeStep();
+    stepsToGo--;
+    if(stepsToGo == 0)
+      moveStep = 3;    
+  }  
+  if(moveStep == 3)
+  {
+    if(retractSteps <= 0)
     {
-      delay(retractDelay);        // delay between steps and retraction
-      retract();  // run retraction movement
+      moveStep = 0;
     }
-
-    previousMillis = millis(); 
+    else 
+    {
+      delay(retractDelay);
+      changeDir();
+      moveStep = 4;
+    }
+  }
+  if(moveStep == 4)
+  {
+    digitalWrite(stepPin, HIGH);
+    delayMicroseconds(delayTime);
+    digitalWrite(stepPin, LOW);
+    delayMicroseconds(delayTime);
+    retractSteps--;
+    if(retractSteps == 0)    
+    {
+      changeDir();
+      moveStep = 0;      
+    }
   }
 
   checkFanTime();
@@ -127,7 +156,7 @@ void checkFanTime()
 
 
 // function to mange the given movement command
-void move()
+void initMove()
 {
   fanSpeed = map(fanSpeed, 0, 100, 0, 255);
   analogWrite(fanPin, fanSpeed);   // set fanSpeed
@@ -140,12 +169,6 @@ void move()
   if (retractSteps > 0)
   {
     stepsToGo += retractSteps;
-  }
-
-  for (int step = 0; step < stepsToGo; step++)
-  {
-    // step the motor one step:
-    makeStep();
   }
 }
 
@@ -185,12 +208,11 @@ void changeDir()
 }
 
 
-// function to manage received data
-void receive()
-{
-  // Get Data
-  String receivedData = Serial.readStringUntil('\n');
 
+void interpretMove(String receivedData)
+{
+  if(moveStep != 0)
+    return;
   // Find the positions of the commas
   int firstIndex =    receivedData.indexOf(';');
   int secondIndex =   receivedData.indexOf(';', firstIndex + 1);
@@ -201,14 +223,14 @@ void receive()
   int seventhIndex =  receivedData.indexOf(';', sixthIndex + 1);
 
   // Get substrings, convert and refresh global variables
-  whichPump =     receivedData.substring(0, firstIndex).toInt();
+  whichPump =     receivedData.substring(1, firstIndex).toInt();
   stepsToGo =     atol(receivedData.substring(firstIndex + 1, secondIndex).c_str());
   retractSteps =  atol(receivedData.substring(secondIndex + 1, thirdIndex).c_str());
   RPM =           receivedData.substring(thirdIndex + 1, fourthIndex).toInt();
   direction =     receivedData.substring(fourthIndex + 1, fifthIndex).toInt();
   retractDelay =  atol(receivedData.substring(fifthIndex + 1, sixthIndex).c_str());
-  fanSpeed =      receivedData.substring(sixthIndex + 1, seventhIndex).toInt);
-  fanTime =       atol(receivedData.substring(seventhIndex + 1)..c_str();
+  fanSpeed =      receivedData.substring(sixthIndex + 1, seventhIndex).toInt();
+  fanTime =       atol(receivedData.substring(seventhIndex + 1).c_str());
   fanTime *= 1000; // convert from given [s] to [ms]
 
   if (fanTime == -1000)
@@ -244,8 +266,30 @@ void receive()
     default:
       break;
   }
+
+  moveStep = 1;
 }
 
+// function to manage received data
+void receive()
+{
+  // Get Data
+  String receivedData = Serial.readStringUntil('\n');
+
+  char command = receivedData[0];
+  switch(command)
+  {
+    case 'm':
+      interpretMove(receivedData);
+      break;
+    case 's':
+      if(moveStep == 0)
+        Serial.print("s1\n");
+      else
+        Serial.print("s0\n");
+      break;
+  }
+}
 
 // function to show "waiting" on LCD
 void waitingScreen()
