@@ -68,14 +68,47 @@ python3 ./PcToArduino.py
 ## Fragen an Betreuer
 
 - Steuerung: Matlab und Kommunikation zu arduino oder nur Arduino zu stepper erklären?
+    
+    NUR ARDUINO SW
+
 - Regler auch erklären?
+
+    NEIN
+
 - Was vom alten paper kann bleiben?
+    
+    ERKENNTNISSE
+
 - Was von den alten prototypen darf ich beschreiben (erklärung warum sie nicht verwendet wurden)?
-- Bedienungsanleitung?
+
+    NUR BESCHREIBEN
+
 - Wann kann ich das nächste mal für feedback abgeben?
-- Komponentenliste in Paper anhängen? Preise? wer zahlt?
-- Zugang für Github Repo?
-- Repo auch anhängen?
+    
+    NÄCHSTE WOCHE (Mi. 19.7.23)
+
+- Komponentenliste in Paper anhängen? inkl. Preise? wer zahlt?
+
+    KEINE LISTE IM PAPER, VERGÜTUNG WIRD ABGEKLÄRT
+    
+- Zugang für Github Repo? Was mach ich mit meinem eigenen Repo? 
+
+    KEIN ZUGANG (MITARBEITER REPO), NICHT VERLINKEN
+
+- Repo auch anhängen? Wenn ja welches? 
+
+    FH REPO, wird geklärt
+
+- Bedienungsanleitung?
+
+    KEINE
 
 
 Paper: [edit](https://www.overleaf.com/1342524919kjhmkdnryqwf), [view](https://www.overleaf.com/read/ywpgvjhnpwxv)
+
+Chapters of paper:
+
+![chapters](/chapters_.png)
+
+abschirmung und vibration
+video und präsi auf english
